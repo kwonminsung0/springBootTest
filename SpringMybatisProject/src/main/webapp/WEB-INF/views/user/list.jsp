@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" session="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -9,7 +10,10 @@
 <title>Mybatis 회원</title>
 </head>
 <body>
-	<h3>회원 목록</h3>
+	<form:form modelAttribute="member" method="POST" action="search">
+		<h3>회원 목록</h3>
+		USERID : <form:input path="userId" /><input type="submit" value="검색" />
+	</form:form>
 	<a href="/user/register">New</a>
 
 	<table border="1">

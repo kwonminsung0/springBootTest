@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.zeus.domain.Board;
 import com.zeus.domain.Member;
 import com.zeus.service.BoardService;
 import com.zeus.service.MemberService;
@@ -23,6 +22,17 @@ public class MemberController {
 
 	@Autowired
 	private MemberService service;
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public String search(String userId, Model model) throws Exception {
+		log.info("search");
+		Member member = new Member();
+		member.setUserId(userId);
+
+		model.addAttribute("member", member);
+		model.addAttribute("list", service.search(userId));
+		return "user/list";
+	}
 
 	//사용자입력폼 요청 (/WEB-INF/views/user/register.jsp)
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -41,6 +51,7 @@ public class MemberController {
 	//사용자 정보리스트 요청 (/WEB-INF/views/user/list.jsp)
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public void list(Model model) throws Exception {
+		model.addAttribute("member", new Member());
 		model.addAttribute("list", service.list());
 	}
 
