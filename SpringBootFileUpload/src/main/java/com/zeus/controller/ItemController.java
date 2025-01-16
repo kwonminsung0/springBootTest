@@ -91,8 +91,12 @@ public class ItemController {
 			log.info("originalName: " + file.getOriginalFilename());
 			log.info("size: " + file.getSize());
 			log.info("contentType: " + file.getContentType());
-
-			//이전에 있는 값 지우고 새로 저장
+			
+			String imgUrl = uploadPath + "/" + itemService.getPicture(item.getItemId());;
+			File imgFile = new File(imgUrl);
+			imgFile.delete();
+			
+			//기존에 있던 파일 지우고 새로 저장
 			String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
 
 			item.setPictureUrl(createdFileName);
@@ -113,6 +117,10 @@ public class ItemController {
 	// 이미지게시판 제거내용 처리요청(DB 및 파일제거요청) /WEB-INF/views/item/remove.jsp
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
 	public String remove(Item item, Model model) throws Exception {
+		String imgUrl = uploadPath + "/" + itemService.getPicture(item.getItemId());
+		File imgFile = new File(imgUrl);
+		imgFile.delete();
+		
 		this.itemService.remove(item.getItemId());
 
 		model.addAttribute("msg", "삭제가 완료되었습니다.");
