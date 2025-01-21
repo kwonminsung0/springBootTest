@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+table.input_table, 
+table.list_table, 
+table.read_table, 
+table.modify_table {
+	margin: 0 auto;
+}
