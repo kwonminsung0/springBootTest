@@ -21,4 +21,24 @@
 		SELECT group_code, code_value, code_name, sort_seq, use_yn, reg_date
 		FROM code_detail ORDER BY group_code ASC, sort_seq ASC
 	</select>
+	
+	<!-- 상세 조회 --> 
+	<select id="read" resultType="CodeDetail"> 
+		SELECT group_code, code_value, code_name, sort_seq, use_yn, reg_date 
+		FROM code_detail 
+		WHERE group_code = #{groupCode} AND code_value = #{codeValue} 
+	</select>
+
+	<!-- 수정 처리 -->
+	<update id="update">
+		UPDATE code_detail
+		SET code_name =#{codeName}
+		WHERE group_code = #{groupCode} AND code_value = #{codeValue}
+	</update>
+
+	<!-- 삭제 처리 -->
+	<delete id="delete">
+		DELETE FROM code_detail
+		WHERE group_code = #{groupCode} AND code_value = #{codeValue}
+	</delete>
 </mapper>
