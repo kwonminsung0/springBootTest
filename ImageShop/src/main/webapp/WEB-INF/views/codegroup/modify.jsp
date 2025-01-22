@@ -42,7 +42,7 @@
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<script>
 		$(document).ready(function() {
-			var formObj = $("#codeGroup");
+			let formObj = $("#codeGroup");
 			$("#btnModify").on("click", function() {
 				formObj.submit();
 			});

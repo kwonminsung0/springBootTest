@@ -46,10 +46,10 @@
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<script>
 		$(document).ready(function() {
-			var formObj = $("#codeGroup");
+			let formObj = $("#codeGroup");
 			$("#btnEdit").on("click", function() {
-				var groupCode = $("#groupCode");
-				var groupCodeVal = groupCode.val();
+				let groupCode = $("#groupCode");
+				let groupCodeVal = groupCode.val();
 
 				self.location = "modify?groupCode=" + groupCodeVal;
 			});

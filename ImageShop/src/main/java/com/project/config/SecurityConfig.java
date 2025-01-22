@@ -27,11 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+//시큐리티 설정
 @EnableWebSecurity
+//시큐리티 애너테이션 활성화를 위한 설정  
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
-
-	//@Autowired
-	//DataSource dataSource;
+	@Autowired
+	DataSource dataSource;
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,67 +41,60 @@ public class SecurityConfig {
 		http.csrf().disable();
 		// URI 패턴으로 모든 접근 제한을 설정한다.
 		// 인가설정
-		http.authorizeRequests().requestMatchers("/board/**").authenticated();
-		http.authorizeRequests().requestMatchers("/manager/**").hasRole("MANAGER");
-		http.authorizeRequests().requestMatchers("/admin/**").hasRole("ADMIN");
-		http.authorizeRequests().anyRequest().permitAll();
+		// http.authorizeRequests().requestMatchers("/board/**").authenticated();
+		// http.authorizeRequests().requestMatchers("/manager/**").hasRole("MANAGER");
+		// http.authorizeRequests().requestMatchers("/admin/**").hasRole("ADMIN");
+		// http.authorizeRequests().anyRequest().permitAll();
 
 		// 개발자가 정의한 로그인 페이지의 URI를 지정한다.
 		// 로그인 성공 후 처리를 담당하는 처리자로 지정한다.
-		http.formLogin();
-		//http.formLogin().loginPage("/login").successHandler(createAuthenticationSuccessHandler());
+		http.formLogin().loginPage("/auth/login").loginProcessingUrl("/login")
+				.successHandler(createAuthenticationSuccessHandler());
 
 		// 로그아웃 처리를 위한 URI를 지정하고, 로그아웃한 후에 세션을 무효화 한다.
-		// 로그아웃을 하면 자동 로그인에 사용하는 쿠키도 삭제해 주도록 한다.
-		//http.logout().logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("remember-me", "JSESSION_ID");
+		http.logout().logoutUrl("/auth/logout").invalidateHttpSession(true).deleteCookies("remember-me", "JSESSION_ID");
 
-		// 등록한 CustomAccessDeniedHandler.java를 접근 거부 처리자로 지정한다.
-		//http.exceptionHandling().accessDeniedHandler(createAccessDeniedHandler());
+		// 로그인 실패시 CustomAccessDeniedHandler.java를 접근 거부 처리자로 지정한다.
+		http.exceptionHandling().accessDeniedHandler(createAccessDeniedHandler());
 
 		// 데이터 소스를 지정하고 테이블을 이용해서 기존 로그인 정보를 기록
 		// 쿠키의 유효 시간을 지정한다(24시간).
-		//http.rememberMe().key("zeus").tokenRepository(createJDBCRepository()).tokenValiditySeconds(60 * 60 * 24);
+		http.rememberMe().key("zeus").tokenRepository(createJDBCRepository()).tokenValiditySeconds(60 * 60 * 24);
 
 		return http.build();
 	}
 
-	/*private PersistentTokenRepository createJDBCRepository() {
+	// 1. read me
+	private PersistentTokenRepository createJDBCRepository() {
 		JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
 		repo.setDataSource(dataSource);
 		return repo;
-	}*/
+	}
 
+	// 2. 데이터베이스를 통한 회원인증관리
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// 지정된 아이디와 패스워드로 로그인이 가능하도록 설정한다.
-		// auth.inMemoryAuthentication().withUser("member").password("{noop}1234").roles("MEMBER");
-		// auth.inMemoryAuthentication().withUser("admin").password("{noop}1234").roles("ADMIN");
 		auth.userDetailsService(createUserDetailsService()).passwordEncoder(createPasswordEncoder());
 	}
 
-	// 스프링 시큐리티의 UserDetailsService를 구현한 클래스를 빈으로 등록한다.
+	// 3. 스프링 시큐리티의 UserDetailsService를 구현한 클래스를 빈으로 등록한다.
 	@Bean
 	public UserDetailsService createUserDetailsService() {
 		return new CustomUserDetailsService();
 	}
 
-	// 사용자가 정의한 비밀번호 암호화 처리기를 빈으로 등록한다.
-	/*
-	 * @Bean public PasswordEncoder createPasswordEncoder() { return new
-	 * CustomNoOpPasswordEncoder(); }
-	 */
-	
+	// 4. 사용자가 정의한 비밀번호 암호화 처리기를 빈으로 등록한다.
 	@Bean
 	public PasswordEncoder createPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	// CustomAccessDeniedHandler를 빈으로 등록한다.
+	// 5. 로그인 잘못되었을때 발생되는 핸들러 처리 CustomAccessDeniedHandler를 빈으로 등록한다.
 	@Bean
 	public AccessDeniedHandler createAccessDeniedHandler() {
 		return new CustomAccessDeniedHandler();
 	}
 
-	// CustomLoginSuccessHandler를 빈으로 등록한다.
+	// 6. 로그인 성공되었을때 발생되는 핸들러 처리 CustomLoginSuccessHandler를 빈으로 등록한다.
 	@Bean
 	public AuthenticationSuccessHandler createAuthenticationSuccessHandler() {
 		return new CustomLoginSuccessHandler();

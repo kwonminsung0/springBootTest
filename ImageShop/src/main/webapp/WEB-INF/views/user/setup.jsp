@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<link rel="stylesheet" href="/css/codegroup.css">
+<link rel="stylesheet" href="/css/user.css">
 <title>Image Shop</title>
 </head>
 <body>
@@ -14,23 +14,27 @@
 	<jsp:include page="/WEB-INF/views/common/menu.jsp" />
 	<main align="center">
 		<h2>
-			<spring:message code="codegroup.header.register" />
+			<spring:message code="user.header.register" />
 		</h2>
-		<form:form modelAttribute="codeGroup" action="/codegroup/register">
-			<table class="input_table">
+		<form:form modelAttribute="member" action="/user/setup">
+			<table class="user_table">
 				<tr>
-					<td><spring:message code="codegroup.groupCode" /></td>
-					<td><form:input path="groupCode" /></td>
-					<td><font color="red"><form:errors path="groupCode" /></font></td>
+					<td><spring:message code="user.userId" /></td>
+					<td><form:input path="userId" /></td>
+					<td><font color="red"><form:errors path="userId" /></font></td>
 				</tr>
 				<tr>
-					<td><spring:message code="codegroup.groupName" /></td>
-					<td><form:input path="groupName" /></td>
-					<td><font color="red"><form:errors path="groupName" /></font></td>
+					<td><spring:message code="user.userPw" /></td>
+					<td><form:input path="userPw" /></td>
+					<td><font color="red"><form:errors path="userPw" /></font></td>
+				</tr>
+				<tr>
+					<td><spring:message code="user.userName" /></td>
+					<td><form:input path="userName" /></td>
+					<td><font color="red"><form:errors path="userName" /></font></td>
 				</tr>
 			</table>
 		</form:form>
-		<br>
 		<div>
 			<button type="button" id="btnRegister">
 				<spring:message code="action.register" />
@@ -43,7 +47,7 @@
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<script>
 		$(document).ready(function() {
-			let formObj = $("#codeGroup");
+			let formObj = $("#member");
 			$("#btnRegister").on("click", function() {
 				formObj.submit();
 			});

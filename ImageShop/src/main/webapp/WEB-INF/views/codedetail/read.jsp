@@ -51,7 +51,7 @@
 	<script>
 		$(document).ready(
 				function() {
-					var formObj = $("#codeDetail");
+					let formObj = $("#codeDetail");
 					$("#btnEdit").on("click",
 							function() {
 								formObj.attr("action", "/codedetail/modify");

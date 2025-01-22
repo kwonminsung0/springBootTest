@@ -45,7 +45,7 @@
 	</main>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 	<script>
-		var result = "${msg}";
+		let result = "${msg}";
 		if (result === "SUCCESS") {
 			alert("<spring:message code='common.processSuccess' />");
 		}
