@@ -16,10 +16,15 @@
 	<jsp:include page="/WEB-INF/views/common/menu.jsp" />
 	<main align="center">
 		<h2>
-			<spring:message code="board.header.register" />
+			<spring:message code="board.header.modify" />
 		</h2>
 
-		<form:form modelAttribute="board" action="/board/register">
+		<form:form modelAttribute="board" action="/board/modify">
+			<form:hidden path="boardNo" />
+			<!-- 현재 페이지 번호와 페이징 크기를 숨겨진 필드 요소를 사용하여 전달한다. -->
+			<input type="hidden" name="page" value="${pgrq.page}">
+			<input type="hidden" name="sizePerPage" value="${pgrq.sizePerPage}">
+
 			<table class="board_table">
 				<tr>
 					<td><spring:message code="board.title" /></td>
@@ -28,7 +33,7 @@
 				</tr>
 				<tr>
 					<td><spring:message code="board.writer" /></td>
-					<td><form:input path="writer" readonly="true" /></td>
+					<td><form:input path="writer" /></td>
 					<td><font color="red"><form:errors path="writer" /></font></td>
 				</tr>
 				<tr>
@@ -39,11 +44,22 @@
 			</table>
 		</form:form>
 		<div>
-			<sec:authorize access="isAuthenticated()">
-				<button type="button" id="btnRegister">
-					<spring:message code="action.register" />
+			<sec:authentication property="principal" var="pinfo" />
+
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<button type="button" id="btnModify">
+					<spring:message code="action.modify" />
 				</button>
 			</sec:authorize>
+
+			<sec:authorize access="hasRole('ROLE_MEMBER')">
+				<c:if test="${pinfo.username eq board.writer}">
+					<button type="button" id="btnModify">
+						<spring:message code="action.modify" />
+					</button>
+				</c:if>
+			</sec:authorize>
+
 			<button type="button" id="btnList">
 				<spring:message code="action.list" />
 			</button>
@@ -53,13 +69,13 @@
 	<script>
 		$(document).ready(function() {
 			let formObj = $("#board");
-
-			$("#btnRegister").on("click", function() {
+			$("#btnModify").on("click", function() {
 				formObj.submit();
 			});
-
 			$("#btnList").on("click", function() {
-				self.location = "list";
+				// 삭제 self.location = "list"; 
+				// 페이징 관련 정보를 쿼리 파라미터로 전달한다. 
+				self.location = "/board/list${pgrq.toUriString()}";
 			});
 		});
 	</script>
