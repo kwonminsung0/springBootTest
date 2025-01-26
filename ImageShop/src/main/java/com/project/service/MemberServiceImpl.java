@@ -93,4 +93,11 @@ public class MemberServiceImpl implements MemberService {
 		memberAuth.setAuth("ROLE_ADMIN");
 		mapper.createAuth(memberAuth);
 	}
+
+	// 회원의 코인을 반환한다.
+	@Override
+	public int getCoin(int userNo) throws Exception {
+		Member member = mapper.read(userNo);
+		return member.getCoin();
+	}
 }
