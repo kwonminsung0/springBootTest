@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.SurveyMapper">
+	<select id="view" resultType="java.util.Map">
+		select * from survey where survey_idx=#{survey_idx}
+	</select>
+
+	<insert id="insert">
+		insert into answer
+		values (answer_seq.NEXTVAL, #{survey_idx}, #{num})
+	</insert>
+
+	<select id="summary" resultType="java.util.Map">
+		select * from survey_v
+		where survey_idx=#{survey_idx}
+	</select>
+</mapper>
