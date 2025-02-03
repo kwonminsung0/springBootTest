@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeus.backend.mapper.MemoMapper">
+	<select id="list" resultType="java.util.Map">
+		SELECT idx, writer, memo, TO_CHAR(post_date, 'YYYY-MM-DD HH24:MI:SS') AS post_date
+		FROM memo
+		WHERE memo LIKE '%'|| #{memo} ||'%' ORDER BY idx DESC
+	</select>
+
+	<insert id="insert">
+		insert into memo values (memo_seq.nextVal, #{writer}, #{memo}, SYSDATE )
+	</insert>
+	<select id="detail" resultType="java.util.Map">
+		select idx,writer,memo, TO_CHAR(post_date, 'YYYY-MM-DD HH24:MI:SS') AS post_date
+		from memo where idx=#{idx}
+	</select>
+	<update id="update">
+		update memo
+		set writer=#{writer}, memo=#{memo}
+		where idx=#{idx}
+	</update>
+
+	<delete id="delete">
+		delete from memo where idx=#{idx}
+	</delete>
+
+</mapper>
